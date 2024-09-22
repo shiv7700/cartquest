@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import categoryRoute from "./routes/categoriesRoute.js";
+import userRoute from "./routes/userRoute.js";
 
 const app = express();
 const port = 3000;
@@ -23,6 +24,7 @@ app.get("/test", (req, res) => {
 app.use("/api", categoryRoute);
 
 // user route
+app.use("/api", userRoute);
 
 // cart route
 
