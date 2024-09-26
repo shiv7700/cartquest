@@ -5,6 +5,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import categoryRoute from "./routes/categoriesRoute.js";
 import userRoute from "./routes/userRoute.js";
+import productRoute from "./routes/productRoute.js";
 
 const app = express();
 const port = 3000;
@@ -20,11 +21,14 @@ app.get("/test", (req, res) => {
   return res.json({ message: "hello world" });
 });
 
+// user route
+app.use("/api", userRoute);
+
 // category route
 app.use("/api", categoryRoute);
 
-// user route
-app.use("/api", userRoute);
+// product route
+app.use("/api", productRoute);
 
 // cart route
 
