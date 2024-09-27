@@ -5,11 +5,11 @@ import { v4 as uuidv4 } from "uuid";
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
+    const newProduct = new Product({ ...req.body, id: uuidv4() });
     const savedProduct = await newProduct.save();
     res.status(201).json({
       message: "successfully created product",
-      data: { ...savedProduct._doc, id: uuidv4() },
+      data: { ...savedProduct._doc },
     });
   } catch (error) {
     res.status(500).json({ message: "Error creating product", error });
@@ -49,10 +49,8 @@ export const getAllProducts = async (req, res) => {
 
 // Get a single product by ID
 export const getProductById = async (req, res) => {
-  console.log(chalk.red(typeof req.params.id));
-
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ id: req.params.id });
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -79,10 +77,12 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// Delete a product by ID
+// Delete a product by custom ID
 export const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+    const deletedProduct = await Product.findOneAndDelete({
+      id: req.params.id,
+    });
     if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }
