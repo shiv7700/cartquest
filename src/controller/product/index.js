@@ -1,15 +1,16 @@
 import chalk from "chalk";
 import Product from "../../model/Product.js";
 import { v4 as uuidv4 } from "uuid";
+import mongoose from "mongoose";
 
 // Create a new product
 export const createProduct = async (req, res) => {
   try {
-    const newProduct = new Product({ ...req.body, id: uuidv4() });
+    const newProduct = new Product(req.body);
     const savedProduct = await newProduct.save();
     res.status(201).json({
-      message: "successfully created product",
-      data: { ...savedProduct._doc },
+      message: "Product created successfully",
+      data: savedProduct,
     });
   } catch (error) {
     res.status(500).json({ message: "Error creating product", error });
@@ -19,27 +20,16 @@ export const createProduct = async (req, res) => {
 // Get all products with pagination
 export const getAllProducts = async (req, res) => {
   try {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-
-    if (page && limit) {
-      const skip = (page - 1) * limit;
-      const totalProducts = await Product.countDocuments();
-      const products = await Product.find().skip(skip).limit(limit);
-
-      return res.json({
-        totalProducts,
-        currentPage: page,
-        totalPages: Math.ceil(totalProducts / limit),
-        products,
-      });
-    }
-
-    const products = await Product.find();
-    const totalProducts = products.length;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const totalProducts = await Product.countDocuments();
+    const products = await Product.find().skip(skip).limit(limit);
 
     res.json({
       totalProducts,
+      currentPage: page,
+      totalPages: Math.ceil(totalProducts / limit),
       products,
     });
   } catch (error) {
@@ -50,12 +40,24 @@ export const getAllProducts = async (req, res) => {
 // Get a single product by ID
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findOne({ id: req.params.id });
+    const productId = req.params.id;
+    console.log("Requested ID:", productId);
+
+    // Validate the ID
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      return res.status(400).json({ message: "Invalid product ID format" });
+    }
+
+    // Fetch the product
+    const product = await Product.findById(productId);
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+
     res.json(product);
   } catch (error) {
+    console.error("Error fetching product:", error);
     res.status(500).json({ message: "Error fetching product", error });
   }
 };
@@ -80,9 +82,7 @@ export const updateProduct = async (req, res) => {
 // Delete a product by custom ID
 export const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findOneAndDelete({
-      id: req.params.id,
-    });
+    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     if (!deletedProduct) {
       return res.status(404).json({ message: "Product not found" });
     }

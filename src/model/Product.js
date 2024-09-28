@@ -9,10 +9,6 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, default: 0 },
   createdAt: { type: Date, default: Date.now },
   image: { type: String, required: true },
-  id: {
-    type: String,
-    required: true,
-  },
 });
 
 const Product = mongoose.model("Product", productSchema);

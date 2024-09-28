@@ -111,6 +111,7 @@ export const getAllUsers = async (req, res) => {
 
 // delete user
 export const deleteUser = async (req, res) => {
+  console.log("======", req.user);
   const { id } = req.params;
 
   if (!id) {
