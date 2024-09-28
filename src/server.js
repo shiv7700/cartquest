@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import categoryRoute from "./routes/categoriesRoute.js";
 import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
+import cartRoute from "./routes/cartRoute.js";
 
 const app = express();
 const port = 3000;
@@ -31,6 +32,7 @@ app.use("/api", categoryRoute);
 app.use("/api", productRoute);
 
 // cart route
+app.use("/api", cartRoute);
 
 app.listen(port, () => {
   console.log("Server is running on port " + port);
