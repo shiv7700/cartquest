@@ -4,7 +4,6 @@ import {
   addToCart,
   removeFromCart,
 } from "../controller/cart/index.js";
-import { authenticateToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -12,7 +11,7 @@ const router = express.Router();
 router.get("/getCart", getCart);
 
 // Add product to cart
-router.post("/addCart", authenticateToken, addToCart);
+router.post("/addCart", addToCart);
 
 // Remove product from cart
 router.delete("/removeCart/:productId", removeFromCart);

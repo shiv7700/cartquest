@@ -6,7 +6,7 @@ import {
   getAllUsers,
   deleteUser,
 } from "../controller/user/index.js";
-import { authenticateToken } from "../middleware/authMiddleware.js";
+import { adminAuth, authenticate } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -20,9 +20,9 @@ router.post("/loginUser", loginUser);
 router.post("/logout", logoutUser);
 
 // get all user
-router.get("/userList", getAllUsers);
+router.get("/userList", authenticate, adminAuth, getAllUsers);
 
 // delete user
-router.delete("/deleteUser/:id", authenticateToken, deleteUser);
+router.delete("/deleteUser/:id", authenticate, adminAuth, deleteUser);
 
 export default router;

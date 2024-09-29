@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 // Register user
 export const registerUser = async (req, res) => {
-  const { username, email, phoneNumber, password } = req.body;
+  const { username, email, phoneNumber, password, role } = req.body;
 
   if (!username || !email || !phoneNumber || !password) {
     return res.status(400).json({ message: "All fields are required" });
@@ -26,7 +26,7 @@ export const registerUser = async (req, res) => {
       email,
       phoneNumber,
       password,
-      role: 0,
+      role,
     });
     await newUser.save();
 
@@ -56,7 +56,7 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET
       // { expiresIn: "1h" }
     );

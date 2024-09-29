@@ -4,16 +4,21 @@ import {
   createCategory,
   deleteCategory,
 } from "../controller/category/index.js";
+import {
+  adminAuth,
+  authenticate,
+  userAuth,
+} from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // get all categories
-router.get("/getallcategories", getAllCategory);
+router.get("/getallcategories", authenticate, userAuth, getAllCategory);
 
 // create category
-router.post("/createcategory", createCategory);
+router.post("/createcategory", authenticate, adminAuth, createCategory);
 
 // delete category
-router.delete("/deletecategory/:id", deleteCategory);
+router.delete("/deletecategory/:id", authenticate, adminAuth, deleteCategory);
 
 export default router;
