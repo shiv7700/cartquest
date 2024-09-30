@@ -18,10 +18,10 @@ const router = express.Router();
 router.post("/products", authenticate, adminAuth, createProduct);
 
 // Get all products
-router.get("/products", authenticate, userAuth, getAllProducts);
+router.get("/products", authenticate, getAllProducts);
 
 // Get product by ID
-router.get("/products/:id", authenticate, userAuth, getProductById);
+router.get("/products/:id", authenticate, getProductById);
 
 // Update a product by ID
 router.put("/products/:id", authenticate, adminAuth, updateProduct);
