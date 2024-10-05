@@ -8,6 +8,7 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import adminStatsRoute from "./routes/adminStats.js";
+import profileRoute from "./routes/profile.js";
 
 const app = express();
 const port = 3000;
@@ -34,6 +35,9 @@ app.use("/api", productRoute);
 
 // cart route
 app.use("/api", cartRoute);
+
+// profile route
+app.use("/api", profileRoute);
 
 // admin stats route
 app.use("/api", adminStatsRoute);
