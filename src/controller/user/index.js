@@ -82,30 +82,28 @@ export const logoutUser = async (req, res) => {
 // get user list
 export const getAllUsers = async (req, res) => {
   try {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    if (page && limit) {
-      const skip = (page - 1) * limit;
-      const totalUsers = await User.countDocuments();
-      const users = await User.find().skip(skip).limit(limit);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const searchQuery = req.query.search || "";
 
-      return res.json({
-        totalUsers,
-        currentPage: page,
-        totalPages: Math.ceil(totalUsers / limit),
-        users,
-      });
-    }
+    const searchCriteria = searchQuery
+      ? { username: { $regex: searchQuery, $options: "i" } }
+      : {};
 
-    const users = await User.find();
-    const totalUsers = User.length;
+    const totalUsers = await User.countDocuments(searchCriteria);
 
-    res.json({
+    const users = await User.find(searchCriteria)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    return res.json({
       totalUsers,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
       users,
     });
   } catch (error) {
-    res.status(500).json({ message: "error fetching users list" });
+    res.status(500).json({ message: "Error fetching users list", error });
   }
 };
 
