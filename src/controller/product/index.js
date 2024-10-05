@@ -19,7 +19,7 @@ export const createProduct = async (req, res) => {
 
 // Get all products with pagination
 export const getAllProducts = async (req, res) => {
-  console.log(req.query.search, "req.query.search");
+
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;

@@ -9,8 +9,8 @@ const authenticate = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach the decoded payload to req.user
-    console.log(req.user, "user"); // Log the attached user object
+    req.user = decoded;
+
     next();
   } catch (error) {
     return res
@@ -21,7 +21,6 @@ const authenticate = (req, res, next) => {
 
 // Middleware for admin access only
 const adminAuth = (req, res, next) => {
-  console.log(req.user, "=======user");
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Admin access only" });
   }
